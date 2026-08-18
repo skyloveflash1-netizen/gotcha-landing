@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const origin = "https://gotcha.myappcenter.top";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const isWeChat = /MicroMessenger/i.test(requestHeaders.get("user-agent") ?? "");
+  const shareImage = isWeChat
+    ? { url: `${origin}/images/gotcha-icon.png`, width: 1024, height: 1024, alt: "Gotcha Logo" }
+    : { url: `${origin}/og.jpg`, width: 1200, height: 630, alt: "Gotcha — 拍一张，就知道放在哪" };
+
+  return {
     metadataBase: new URL(origin),
     title: "Gotcha｜拍照记录物品位置，快速找到东西",
     description: "Gotcha 是一款本地优先的物品位置管理应用。拍照记录房间、柜子和物品的存放位置，支持离线 AI 识别、搜索、图钉定位与备份。",
@@ -24,15 +32,16 @@ export const metadata: Metadata = {
       url: origin,
       siteName: "Gotcha",
       locale: "zh_CN",
-      images: [{ url: `${origin}/og.jpg`, width: 1200, height: 630, alt: "Gotcha — 拍一张，就知道放在哪" }],
+      images: [shareImage],
     },
     twitter: {
       card: "summary_large_image",
       title: "Gotcha｜拍一张，就知道东西放在哪",
       description: "用照片记住每件物品的位置。支持离线 AI、搜索、图钉定位和备份。",
-      images: [`${origin}/og.jpg`],
+      images: [shareImage.url],
     },
-};
+  };
+}
 
 const structuredData = {
   "@context": "https://schema.org",
