@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const origin = process.env.GITHUB_ACTIONS === "true"
-  ? "https://skyloveflash1-netizen.github.io/gotcha-landing"
-  : "https://gotcha-memory.kevin-skyloveflash.chatgpt.site";
+const origin = "https://gotcha.myappcenter.top";
 
 export const metadata: Metadata = {
     metadataBase: new URL(origin),

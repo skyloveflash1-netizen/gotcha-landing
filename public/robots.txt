@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gotcha-memory.kevin-skyloveflash.chatgpt.site/sitemap.xml
+Sitemap: https://gotcha.myappcenter.top/sitemap.xml

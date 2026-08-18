@@ -30,8 +30,8 @@ async function rewriteAssetReferences(directory) {
 
     const source = await readFile(filePath, "utf8");
     const updated = source
-      .replaceAll("/gotcha-landing/_next/", "/gotcha-landing/assets/")
-      .replaceAll("/_next/", "/gotcha-landing/assets/")
+      .replaceAll("/gotcha-landing/_next/", "/assets/")
+      .replaceAll("/_next/", "/assets/")
       .replaceAll("_next/", "assets/");
 
     if (updated !== source) {
