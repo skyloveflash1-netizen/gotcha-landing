@@ -9,7 +9,7 @@ const socialByLanguage = {
     title: "Gotcha | Snap it. Know exactly where it is.",
     description: "Remember where every item lives with photos, offline AI, visual pins, search, and private local-first storage.",
     locale: "en_US",
-    image: "/og-en.png",
+    image: "/og-en.jpg",
     alt: "Gotcha — Snap it. Know exactly where it is.",
   },
   "zh-cn": {
@@ -23,21 +23,21 @@ const socialByLanguage = {
     title: "Gotcha｜拍一張，就知道東西放在哪",
     description: "用照片記住每件物品的位置。支援離線 AI、搜尋、圖釘定位和備份，本機優先且無廣告。",
     locale: "zh_TW",
-    image: "/og-zh-tw.png",
+    image: "/og-zh-tw.jpg",
     alt: "Gotcha — 拍一張，就知道放在哪",
   },
   ja: {
     title: "Gotcha｜撮るだけ。どこにあるか、すぐわかる。",
     description: "写真、オフラインAI、ピン、検索で、すべての持ち物の場所をすぐに確認できます。",
     locale: "ja_JP",
-    image: "/og-ja.png",
+    image: "/og-ja.jpg",
     alt: "Gotcha — 撮るだけ。どこにあるか、すぐわかる。",
   },
   ko: {
     title: "Gotcha｜사진 한 장이면, 어디 있는지 바로 알아요.",
     description: "사진, 오프라인 AI, 핀과 검색으로 모든 물건의 위치를 쉽고 빠르게 확인하세요.",
     locale: "ko_KR",
-    image: "/og-ko.png",
+    image: "/og-ko.jpg",
     alt: "Gotcha — 사진 한 장이면, 어디 있는지 바로 알아요.",
   },
 } as const;
