@@ -10,6 +10,8 @@ const appStoreUrls = {
   ko: "https://apps.apple.com/kr/app/id6788549634",
 } as const;
 
+const androidDownloadUrl = "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk";
+
 const copy = {
   zh: {
     nav: ["功能", "使用方式", "隐私"], download: "立即下载", eyebrow: "你的物品记忆外脑",
@@ -33,8 +35,8 @@ const copy = {
     privacyItems: ["本地存储", "私人 iCloud 同步", "离线 AI 识别", "ZIP 自主备份"],
     scenariosKicker: "不只是收纳", scenariosTitle: "从日常整理，到人生的大工程。",
     scenarios: [["搬家打包", "按箱号记录物品，到新家不必拆遍所有纸箱。"], ["装修记录", "在房间全景中标记施工细节，与承包商准确沟通。"], ["重要证件", "护照、保修卡、备用钥匙，知道它们最后放在哪。"]],
-    finalTitle: "让大脑记住重要的事，\n让 Gotcha 记住东西放在哪。", finalLead: "现在即可在 iPhone 与 iPad 上免费下载。",
-    android: "Android 版即将开放", footer: "帮你记得每一件重要的物品", privacyLink: "隐私政策",
+    finalTitle: "让大脑记住重要的事，\n让 Gotcha 记住东西放在哪。", finalLead: "现在即可在 iPhone、iPad 与 Android 上免费下载。",
+    android: "下载 Android 版", footer: "帮你记得每一件重要的物品", privacyLink: "隐私政策",
   },
   tw: {
     nav: ["功能", "使用方式", "隱私"], download: "立即下載", eyebrow: "你的物品記憶外腦",
@@ -44,7 +46,7 @@ const copy = {
     flowKicker: "三步完成", flowTitle: "記住每一件重要的物品。", steps: [["01", "建立空間", "用照片還原房間、櫃子與收納箱。"], ["02", "拍下物品", "選擇位置，AI 幫你補充名稱與標籤。"], ["03", "隨時找到", "搜尋或點開空間照片，直接看到物品在哪。"]],
     privacyKicker: "隱私優先", privacyTitle: "你的家，只存在你的裝置裡。", privacyText: "Gotcha 採用本機優先架構。物品照片與記錄不會上傳第三方伺服器；Apple 裝置可透過私人 iCloud 同步，並支援 ZIP 備份。", privacyItems: ["本機儲存", "私人 iCloud 同步", "離線 AI 辨識", "ZIP 自主備份"],
     scenariosKicker: "不只是收納", scenariosTitle: "從日常整理，到人生的大工程。", scenarios: [["搬家打包", "按箱號記錄，到新家不必拆遍所有紙箱。"], ["裝潢記錄", "在房間全景標記施工細節，準確溝通。"], ["重要證件", "護照、保固卡、備用鑰匙，知道最後放在哪。"]],
-    finalTitle: "讓大腦記住重要的事，\n讓 Gotcha 記住東西放在哪。", finalLead: "現在即可在 iPhone 與 iPad 上免費下載。", android: "Android 版即將開放", footer: "幫你記得每一件重要的物品", privacyLink: "隱私政策",
+    finalTitle: "讓大腦記住重要的事，\n讓 Gotcha 記住東西放在哪。", finalLead: "現在即可在 iPhone、iPad 與 Android 上免費下載。", android: "下載 Android 版", footer: "幫你記得每一件重要的物品", privacyLink: "隱私政策",
   },
   en: {
     nav: ["Features", "How it works", "Privacy"], download: "Download", eyebrow: "Your external memory for things",
@@ -54,7 +56,7 @@ const copy = {
     flowKicker: "Three simple steps", flowTitle: "Remember every item that matters.", steps: [["01", "Create a space", "Use photos to map rooms, cabinets and storage boxes."], ["02", "Snap the item", "Choose its location while AI suggests a name and tags."], ["03", "Find it anytime", "Search or open the space photo to see where it is."]],
     privacyKicker: "Privacy first", privacyTitle: "Your home stays on your devices.", privacyText: "Gotcha is local-first. Personal photos and records never go to a third-party server. Apple devices can sync through your private iCloud, with portable ZIP backups whenever you want.", privacyItems: ["Local storage", "Private iCloud sync", "Offline AI", "Portable ZIP backups"],
     scenariosKicker: "Beyond storage", scenariosTitle: "For everyday order—and life's bigger projects.", scenarios: [["Moving day", "Track every box, then find what you need without unpacking them all."], ["Renovation notes", "Pin issues on a room photo and communicate clearly with contractors."], ["Important documents", "Always know where the passport, warranty or spare key went."]],
-    finalTitle: "Save your memory for what matters.\nLet Gotcha remember where things are.", finalLead: "Free to download now on iPhone and iPad.", android: "Android is coming soon", footer: "Remember every item that matters", privacyLink: "Privacy Policy",
+    finalTitle: "Save your memory for what matters.\nLet Gotcha remember where things are.", finalLead: "Free to download now on iPhone, iPad and Android.", android: "Download for Android", footer: "Remember every item that matters", privacyLink: "Privacy Policy",
   },
   ja: {
     nav: ["機能", "使い方", "プライバシー"], download: "ダウンロード", eyebrow: "持ち物のための外部脳",
@@ -64,7 +66,7 @@ const copy = {
     flowKicker: "3ステップ", flowTitle: "大切な持ち物をすべて記憶。", steps: [["01", "空間を作る", "部屋や棚、収納箱を写真で登録。"], ["02", "持ち物を撮る", "場所を選び、AIが名前とタグを提案。"], ["03", "いつでも見つける", "検索や写真から場所をすぐ確認。"]],
     privacyKicker: "プライバシー優先", privacyTitle: "あなたの家は、あなたの端末だけに。", privacyText: "Gotchaはローカル優先。写真や記録を第三者サーバーへ送りません。Apple端末では個人のiCloud同期とZIPバックアップを利用できます。", privacyItems: ["ローカル保存", "個人iCloud同期", "オフラインAI", "ZIPバックアップ"],
     scenariosKicker: "収納だけじゃない", scenariosTitle: "日々の整理から、大きなプロジェクトまで。", scenarios: [["引っ越し", "箱番号で記録し、全部開けずに必要な物を発見。"], ["リフォーム", "部屋写真に不具合をマークし、業者と正確に共有。"], ["重要書類", "パスポートや保証書、予備鍵の場所を記憶。"]],
-    finalTitle: "大切なことは脳に。\n物の場所はGotchaに。", finalLead: "iPhoneとiPadで今すぐ無料ダウンロード。", android: "Android版は近日公開", footer: "大切な持ち物をすべて記憶", privacyLink: "プライバシーポリシー",
+    finalTitle: "大切なことは脳に。\n物の場所はGotchaに。", finalLead: "iPhone、iPad、Androidで今すぐ無料ダウンロード。", android: "Android版をダウンロード", footer: "大切な持ち物をすべて記憶", privacyLink: "プライバシーポリシー",
   },
   ko: {
     nav: ["기능", "사용 방법", "개인정보"], download: "다운로드", eyebrow: "물건을 위한 외장 두뇌",
@@ -74,7 +76,7 @@ const copy = {
     flowKicker: "간단한 3단계", flowTitle: "중요한 모든 물건을 기억하세요.", steps: [["01", "공간 만들기", "방, 수납장과 상자를 사진으로 등록하세요."], ["02", "물건 촬영", "위치를 고르면 AI가 이름과 태그를 제안합니다."], ["03", "언제든 찾기", "검색하거나 공간 사진에서 위치를 확인하세요."]],
     privacyKicker: "개인정보 우선", privacyTitle: "당신의 집은 당신의 기기에만.", privacyText: "Gotcha는 로컬 우선 앱입니다. 사진과 기록은 제3자 서버로 전송되지 않습니다. Apple 기기에서는 개인 iCloud 동기화와 ZIP 백업을 사용할 수 있습니다.", privacyItems: ["로컬 저장", "개인 iCloud 동기화", "오프라인 AI", "ZIP 백업"],
     scenariosKicker: "수납 그 이상", scenariosTitle: "일상 정리부터 큰 프로젝트까지.", scenarios: [["이사", "상자 번호로 기록하고 모두 열지 않고 필요한 것을 찾으세요."], ["인테리어", "방 사진에 문제를 표시해 시공업체와 정확히 소통하세요."], ["중요 서류", "여권, 보증서와 예비 열쇠의 위치를 기억하세요."]],
-    finalTitle: "중요한 일은 머리에,\n물건 위치는 Gotcha에.", finalLead: "iPhone과 iPad에서 지금 무료로 다운로드하세요.", android: "Android 버전 준비 중", footer: "중요한 모든 물건을 기억해주는 앱", privacyLink: "개인정보 처리방침",
+    finalTitle: "중요한 일은 머리에,\n물건 위치는 Gotcha에.", finalLead: "iPhone, iPad와 Android에서 지금 무료로 다운로드하세요.", android: "Android용 다운로드", footer: "중요한 모든 물건을 기억해주는 앱", privacyLink: "개인정보 처리방침",
   },
 } as const;
 
@@ -152,7 +154,7 @@ export default function Home() {
           <p className="lead">{t.lead}</p>
           <div className="heroActions">
             <a className="button buttonDark" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a>
-            <span className="button buttonLight disabled"><span className="androidMark">↧</span><span><small>Android</small>{t.android}</span></span>
+            <a className="button buttonLight" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark">↧</span><span><small>Android APK</small>{t.android}</span></a>
           </div>
           <p className="microcopy">{t.trust.map((item) => <span key={item}>✓ {item}</span>)}</p>
         </div>
@@ -189,7 +191,7 @@ export default function Home() {
       <section className="privacy" id="privacy"><div className="shell privacyInner"><div><p className="sectionKicker">{t.privacyKicker}</p><h2>{t.privacyTitle}</h2><p className="privacyText">{t.privacyText}</p><a className="textLink" href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink} ↗</a></div>
         <div className="privacyCard"><div className="shield">⌂<span>✓</span></div>{t.privacyItems.map(item=><p key={item}><span>✓</span>{item}</p>)}</div></div></section>
 
-      <section className="finalCta" id="download"><div className="shell finalInner"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a></div></section>
+      <section className="finalCta" id="download"><div className="shell finalInner"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><div className="finalActions"><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a><a className="button buttonLight finalButton" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark">↧</span><span><small>Android APK</small>{t.android}</span></a></div></div></section>
 
       <footer><div className="shell footerInner"><div className="brand"><img src={asset("/images/gotcha-icon.png")} alt="" /><span>Gotcha</span></div><p>{t.footer}</p><a href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink}</a></div>
         <div className="shell languageBar" aria-label="Language">{languages.map(item=><button className={lang===item.code?"active":""} key={item.code} onClick={()=>changeLanguage(item.code)} aria-pressed={lang===item.code}>{item.label}</button>)}</div>
