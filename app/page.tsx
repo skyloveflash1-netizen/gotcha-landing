@@ -79,8 +79,9 @@ const copy = {
 } as const;
 
 type Lang = keyof typeof copy;
-const basePath = "/gotcha-landing";
-const asset = (path: string) => `${basePath}${path}`;
+// Relative asset URLs work both at the Sites domain root and in the
+// /gotcha-landing/ subdirectory used by GitHub Pages.
+const asset = (path: string) => `.${path.startsWith("/") ? path : `/${path}`}`;
 const languages: { code: Lang; label: string }[] = [
   { code: "zh", label: "简中" }, { code: "tw", label: "繁中" }, { code: "en", label: "EN" }, { code: "ja", label: "日本語" }, { code: "ko", label: "한국어" },
 ];
