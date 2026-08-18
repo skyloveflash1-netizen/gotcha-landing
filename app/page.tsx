@@ -121,7 +121,11 @@ export default function Home() {
   const [lang, setLang] = useState<Lang>("zh");
   const [carouselPage, setCarouselPage] = useState(0);
   const [cardsPerPage, setCardsPerPage] = useState(3);
-  const touchStartX = useRef(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const carouselViewport = useRef<HTMLDivElement>(null);
+  const dragStartX = useRef(0);
+  const dragPointerId = useRef<number | null>(null);
   const t = copy[lang];
   const gallery = galleryCopy[lang];
   const screens = screenshotSets[lang];
@@ -152,6 +156,15 @@ export default function Home() {
     setCarouselPage(0);
   };
   const goToCarouselPage = (next: number) => setCarouselPage((next + carouselPages.length) % carouselPages.length);
+  const finishDrag = (clientX: number) => {
+    if (dragPointerId.current === null) return;
+    const distance = clientX - dragStartX.current;
+    const threshold = Math.min(100, (carouselViewport.current?.clientWidth ?? 500) * 0.12);
+    if (Math.abs(distance) >= threshold) goToCarouselPage(carouselPage + (distance < 0 ? 1 : -1));
+    setDragOffset(0);
+    setIsDragging(false);
+    dragPointerId.current = null;
+  };
 
   return (
     <main>
@@ -198,9 +211,9 @@ export default function Home() {
       <section className="section shell gallerySection" id="screenshots">
         <header className="sectionHeader"><p className="sectionKicker">{gallery.kicker}</p><h2>{gallery.title}</h2><p>{gallery.lead}</p></header>
         <div className="screenCarousel screenshotSwap" key={`${lang}-gallery`}>
-          <div className="carouselViewport" tabIndex={0} aria-label={gallery.title} onKeyDown={(event) => { if (event.key === "ArrowLeft") goToCarouselPage(carouselPage - 1); if (event.key === "ArrowRight") goToCarouselPage(carouselPage + 1); }} onTouchStart={(event) => { touchStartX.current = event.touches[0].clientX; }} onTouchEnd={(event) => { const distance = event.changedTouches[0].clientX - touchStartX.current; if (Math.abs(distance) > 45) goToCarouselPage(carouselPage + (distance < 0 ? 1 : -1)); }}>
-            <div className="screenGallery" style={{ transform: `translateX(-${carouselPage * 100}%)` }} aria-live="polite">
-              {carouselPages.map((page, pageIndex) => <div className="carouselPage" key={`${lang}-${pageIndex}`} aria-hidden={pageIndex !== carouselPage}>{page.map((src) => { const index = screens.indexOf(src); return <figure className="screenCard" key={src}><div className="screenFrame"><img src={src} alt={gallery.labels[index]} width="720" height="1558" loading={pageIndex === 0 ? "eager" : "lazy"} decoding="async" /></div><figcaption><span>{String(index + 1).padStart(2, "0")}</span>{gallery.labels[index]}</figcaption></figure>; })}</div>)}
+          <div ref={carouselViewport} className={`carouselViewport${isDragging ? " dragging" : ""}`} tabIndex={0} aria-label={gallery.title} onKeyDown={(event) => { if (event.key === "ArrowLeft") goToCarouselPage(carouselPage - 1); if (event.key === "ArrowRight") goToCarouselPage(carouselPage + 1); }} onPointerDown={(event) => { if (event.pointerType === "mouse" && event.button !== 0) return; dragStartX.current = event.clientX; dragPointerId.current = event.pointerId; setIsDragging(true); event.currentTarget.setPointerCapture(event.pointerId); }} onPointerMove={(event) => { if (dragPointerId.current !== event.pointerId) return; const width = carouselViewport.current?.clientWidth ?? 1; setDragOffset(Math.max(-width * 0.45, Math.min(width * 0.45, event.clientX - dragStartX.current))); }} onPointerUp={(event) => finishDrag(event.clientX)} onPointerCancel={(event) => finishDrag(event.clientX)}>
+            <div className={`screenGallery${isDragging ? " dragging" : ""}`} style={{ transform: `translateX(calc(-${carouselPage * 100}% + ${dragOffset}px))` }} aria-live="polite">
+              {carouselPages.map((page, pageIndex) => <div className="carouselPage" key={`${lang}-${pageIndex}`} aria-hidden={pageIndex !== carouselPage}>{page.map((src) => { const index = screens.indexOf(src); return <figure className="screenCard" key={src}><div className="screenFrame"><img src={src} alt={gallery.labels[index]} width="720" height="1558" loading={pageIndex === 0 ? "eager" : "lazy"} decoding="async" draggable="false" /></div><figcaption><span>{String(index + 1).padStart(2, "0")}</span>{gallery.labels[index]}</figcaption></figure>; })}</div>)}
             </div>
           </div>
           <div className="carouselControls">
