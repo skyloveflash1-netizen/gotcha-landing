@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const appStoreUrls = {
   zh: "https://apps.apple.com/cn/app/id6788549634",
@@ -119,9 +119,13 @@ function detectSystemLanguage(): Lang {
 
 export default function Home() {
   const [lang, setLang] = useState<Lang>("zh");
+  const [carouselPage, setCarouselPage] = useState(0);
+  const [cardsPerPage, setCardsPerPage] = useState(3);
+  const touchStartX = useRef(0);
   const t = copy[lang];
   const gallery = galleryCopy[lang];
   const screens = screenshotSets[lang];
+  const carouselPages = Array.from({ length: Math.ceil(screens.length / cardsPerPage) }, (_, index) => screens.slice(index * cardsPerPage, (index + 1) * cardsPerPage));
 
   useEffect(() => {
     const saved = window.localStorage.getItem("gotcha-language") as Lang | null;
@@ -133,7 +137,21 @@ export default function Home() {
     window.localStorage.setItem("gotcha-language", lang);
   }, [lang]);
 
-  const changeLanguage = (next: Lang) => setLang(next);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 700px)");
+    const syncCardsPerPage = () => setCardsPerPage(media.matches ? 1 : 3);
+    syncCardsPerPage();
+    media.addEventListener("change", syncCardsPerPage);
+    return () => media.removeEventListener("change", syncCardsPerPage);
+  }, []);
+
+  useEffect(() => setCarouselPage(0), [cardsPerPage]);
+
+  const changeLanguage = (next: Lang) => {
+    setLang(next);
+    setCarouselPage(0);
+  };
+  const goToCarouselPage = (next: number) => setCarouselPage((next + carouselPages.length) % carouselPages.length);
 
   return (
     <main>
@@ -179,8 +197,17 @@ export default function Home() {
 
       <section className="section shell gallerySection" id="screenshots">
         <header className="sectionHeader"><p className="sectionKicker">{gallery.kicker}</p><h2>{gallery.title}</h2><p>{gallery.lead}</p></header>
-        <div className="screenGallery screenshotSwap" key={`${lang}-gallery`}>
-          {screens.map((src, index) => <figure className="screenCard" key={src}><div className="screenFrame"><img src={src} alt={gallery.labels[index]} width="720" height="1558" loading={index < 2 ? "eager" : "lazy"} decoding="async" /></div><figcaption><span>{String(index + 1).padStart(2, "0")}</span>{gallery.labels[index]}</figcaption></figure>)}
+        <div className="screenCarousel screenshotSwap" key={`${lang}-gallery`}>
+          <div className="carouselViewport" tabIndex={0} aria-label={gallery.title} onKeyDown={(event) => { if (event.key === "ArrowLeft") goToCarouselPage(carouselPage - 1); if (event.key === "ArrowRight") goToCarouselPage(carouselPage + 1); }} onTouchStart={(event) => { touchStartX.current = event.touches[0].clientX; }} onTouchEnd={(event) => { const distance = event.changedTouches[0].clientX - touchStartX.current; if (Math.abs(distance) > 45) goToCarouselPage(carouselPage + (distance < 0 ? 1 : -1)); }}>
+            <div className="screenGallery" style={{ transform: `translateX(-${carouselPage * 100}%)` }} aria-live="polite">
+              {carouselPages.map((page, pageIndex) => <div className="carouselPage" key={`${lang}-${pageIndex}`} aria-hidden={pageIndex !== carouselPage}>{page.map((src) => { const index = screens.indexOf(src); return <figure className="screenCard" key={src}><div className="screenFrame"><img src={src} alt={gallery.labels[index]} width="720" height="1558" loading={pageIndex === 0 ? "eager" : "lazy"} decoding="async" /></div><figcaption><span>{String(index + 1).padStart(2, "0")}</span>{gallery.labels[index]}</figcaption></figure>; })}</div>)}
+            </div>
+          </div>
+          <div className="carouselControls">
+            <button className="carouselArrow" type="button" onClick={() => goToCarouselPage(carouselPage - 1)} aria-label="Previous screenshots">←</button>
+            <div className="carouselDots" aria-label="Screenshot pages">{carouselPages.map((_, index) => <button type="button" key={index} className={index === carouselPage ? "active" : ""} onClick={() => setCarouselPage(index)} aria-label={`Page ${index + 1}`} aria-current={index === carouselPage ? "true" : undefined} />)}</div>
+            <button className="carouselArrow" type="button" onClick={() => goToCarouselPage(carouselPage + 1)} aria-label="Next screenshots">→</button>
+          </div>
         </div>
       </section>
 
