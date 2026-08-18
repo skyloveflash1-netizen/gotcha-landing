@@ -10,7 +10,13 @@ const appStoreUrls = {
   ko: "https://apps.apple.com/kr/app/id6788549634",
 } as const;
 
-const androidDownloadUrl = "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk";
+const androidDownloadUrls = {
+  zh: "https://sitzfb.51fgz.com/imgs/Gotcha_K3_1.0_android_release.apk",
+  tw: "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk",
+  en: "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk",
+  ja: "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk",
+  ko: "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk",
+} as const;
 
 const copy = {
   zh: {
@@ -207,7 +213,7 @@ export default function Home() {
           <p className="lead">{t.lead}</p>
           <div className="heroActions">
             <a className="button buttonDark" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><AppleLogo /><span><small>Download on the</small>App Store</span></a>
-            <a className="button buttonLight" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark"><AndroidLogo /></span><span><small>Android APK</small>{t.android}</span></a>
+            <a className="button buttonLight" href={androidDownloadUrls[lang]} target="_blank" rel="noreferrer"><span className="androidMark"><AndroidLogo /></span><span><small>Android APK</small>{t.android}</span></a>
           </div>
           <p className="microcopy">{t.trust.map((item) => <span key={item}>✓ {item}</span>)}</p>
         </div>
@@ -253,7 +259,7 @@ export default function Home() {
       <section className="privacy" id="privacy"><div className="shell privacyInner"><div><p className="sectionKicker">{t.privacyKicker}</p><h2>{t.privacyTitle}</h2><p className="privacyText">{t.privacyText}</p><a className="textLink" href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink} ↗</a></div>
         <div className="privacyCard"><div className="shield">⌂<span>✓</span></div>{t.privacyItems.map(item=><p key={item}><span>✓</span>{item}</p>)}</div></div></section>
 
-      <section className="finalCta" id="download"><div className="shell finalInner"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><div className="finalActions"><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><AppleLogo /><span><small>Download on the</small>App Store</span></a><a className="button buttonLight finalButton" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark"><AndroidLogo /></span><span><small>Android APK</small>{t.android}</span></a></div></div></section>
+      <section className="finalCta" id="download"><div className="shell finalInner"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><div className="finalActions"><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><AppleLogo /><span><small>Download on the</small>App Store</span></a><a className="button buttonLight finalButton" href={androidDownloadUrls[lang]} target="_blank" rel="noreferrer"><span className="androidMark"><AndroidLogo /></span><span><small>Android APK</small>{t.android}</span></a></div></div></section>
 
       <footer><div className="shell footerInner"><div className="brand"><img src={asset("/images/gotcha-icon.png")} alt="" /><span>Gotcha</span></div><p>{t.footer}</p><a href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink}</a></div>
         <div className="shell languageBar" aria-label="Language">{languages.map(item=><button className={lang===item.code?"active":""} key={item.code} onClick={()=>changeLanguage(item.code)} aria-pressed={lang===item.code}>{item.label}</button>)}</div>

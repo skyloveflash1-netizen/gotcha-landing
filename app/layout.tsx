@@ -45,7 +45,7 @@ const structuredData = {
   image: `${origin}/images/gotcha-icon.png`,
   downloadUrl: [
     "https://apps.apple.com/cn/app/id6788549634",
-    "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk",
+    "https://sitzfb.51fgz.com/imgs/Gotcha_K3_1.0_android_release.apk",
   ],
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 };
