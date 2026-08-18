@@ -198,8 +198,8 @@ export default function Home() {
           <h1>{t.titleA}<br /><em>{t.titleB}</em></h1>
           <p className="lead">{t.lead}</p>
           <div className="heroActions">
-            <a className="button buttonDark" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a>
-            <a className="button buttonLight" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark">↧</span><span><small>Android APK</small>{t.android}</span></a>
+            <a className="button buttonDark" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><img className="platformLogo appleLogo" src={asset("/images/apple.svg")} alt="" width="30" height="30" /><span><small>Download on the</small>App Store</span></a>
+            <a className="button buttonLight" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark"><img src={asset("/images/android.svg")} alt="" width="22" height="22" /></span><span><small>Android APK</small>{t.android}</span></a>
           </div>
           <p className="microcopy">{t.trust.map((item) => <span key={item}>✓ {item}</span>)}</p>
         </div>
@@ -245,7 +245,7 @@ export default function Home() {
       <section className="privacy" id="privacy"><div className="shell privacyInner"><div><p className="sectionKicker">{t.privacyKicker}</p><h2>{t.privacyTitle}</h2><p className="privacyText">{t.privacyText}</p><a className="textLink" href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink} ↗</a></div>
         <div className="privacyCard"><div className="shield">⌂<span>✓</span></div>{t.privacyItems.map(item=><p key={item}><span>✓</span>{item}</p>)}</div></div></section>
 
-      <section className="finalCta" id="download"><div className="shell finalInner"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><div className="finalActions"><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a><a className="button buttonLight finalButton" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark">↧</span><span><small>Android APK</small>{t.android}</span></a></div></div></section>
+      <section className="finalCta" id="download"><div className="shell finalInner"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><div className="finalActions"><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><img className="platformLogo appleLogo" src={asset("/images/apple.svg")} alt="" width="30" height="30" /><span><small>Download on the</small>App Store</span></a><a className="button buttonLight finalButton" href={androidDownloadUrl} target="_blank" rel="noreferrer"><span className="androidMark"><img src={asset("/images/android.svg")} alt="" width="22" height="22" /></span><span><small>Android APK</small>{t.android}</span></a></div></div></section>
 
       <footer><div className="shell footerInner"><div className="brand"><img src={asset("/images/gotcha-icon.png")} alt="" /><span>Gotcha</span></div><p>{t.footer}</p><a href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink}</a></div>
         <div className="shell languageBar" aria-label="Language">{languages.map(item=><button className={lang===item.code?"active":""} key={item.code} onClick={()=>changeLanguage(item.code)} aria-pressed={lang===item.code}>{item.label}</button>)}</div>
