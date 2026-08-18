@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Produce a fully static site so GitHub Pages can host it without a server.
+  output: "export",
 };
 
 export default nextConfig;
