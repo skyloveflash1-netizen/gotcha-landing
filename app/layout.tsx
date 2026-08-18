@@ -7,22 +7,49 @@ const origin = process.env.GITHUB_ACTIONS === "true"
 
 export const metadata: Metadata = {
     metadataBase: new URL(origin),
-    title: "Gotcha — 拍照即存，物品不再找不见",
-    description: "Gotcha 是一款本地优先的私人物品管家。拍照记录存放位置，设备端 AI 自动识别，随时快速找到重要物品。",
+    title: "Gotcha｜拍照记录物品位置，快速找到东西",
+    description: "Gotcha 是一款本地优先的物品位置管理应用。拍照记录房间、柜子和物品的存放位置，支持离线 AI 识别、搜索、图钉定位与备份。",
+    applicationName: "Gotcha",
+    authors: [{ name: "Gotcha" }],
+    creator: "Gotcha",
+    publisher: "Gotcha",
+    category: "lifestyle",
+    keywords: ["Gotcha", "物品管理", "收纳整理", "物品位置", "家庭收纳", "搬家整理", "照片管理", "离线 AI", "item organizer", "home inventory"],
+    alternates: { canonical: origin },
+    manifest: `${origin}/manifest.webmanifest`,
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
     icons: { icon: `${origin}/images/gotcha-icon.png`, shortcut: `${origin}/images/gotcha-icon.png` },
     openGraph: {
-      title: "Gotcha — 拍一张，就知道放在哪",
-      description: "用照片记住每件物品的位置。本地优先、设备端 AI、隐私安全。",
+      title: "Gotcha｜拍一张，就知道东西放在哪",
+      description: "用照片记住每件物品的位置。支持离线 AI、搜索、图钉定位和备份，本地优先且无广告。",
       type: "website",
       url: origin,
-      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "Gotcha — 拍一张，就知道放在哪" }],
+      siteName: "Gotcha",
+      locale: "zh_CN",
+      images: [{ url: `${origin}/og.jpg`, width: 1200, height: 630, alt: "Gotcha — 拍一张，就知道放在哪" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Gotcha — 拍一张，就知道放在哪",
-      description: "用照片记住每件物品的位置。本地优先、设备端 AI、隐私安全。",
-      images: [`${origin}/og.png`],
+      title: "Gotcha｜拍一张，就知道东西放在哪",
+      description: "用照片记住每件物品的位置。支持离线 AI、搜索、图钉定位和备份。",
+      images: [`${origin}/og.jpg`],
     },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  name: "Gotcha",
+  description: "用照片记录物品的存放位置，通过离线 AI、搜索和图钉定位快速找到物品。",
+  applicationCategory: "LifestyleApplication",
+  operatingSystem: "iOS, iPadOS, Android",
+  url: origin,
+  image: `${origin}/images/gotcha-icon.png`,
+  downloadUrl: [
+    "https://apps.apple.com/cn/app/id6788549634",
+    "https://github.com/skyloveflash1-netizen/gotcha-landing/releases/download/v1.0.0/Gotcha_K3_1.0_android_release.apk",
+  ],
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 };
 
 export default function RootLayout({
@@ -32,7 +59,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        {children}
+      </body>
     </html>
   );
 }

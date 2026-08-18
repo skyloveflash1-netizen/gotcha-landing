@@ -89,6 +89,13 @@ const languages: { code: Lang; label: string }[] = [
 ];
 
 const languageTags: Record<Lang, string> = { zh: "zh-CN", tw: "zh-TW", en: "en", ja: "ja", ko: "ko" };
+const seoCopy: Record<Lang, { title: string; description: string }> = {
+  zh: { title: "Gotcha｜拍照记录物品位置，快速找到东西", description: "Gotcha 用照片记录房间、柜子与物品的存放位置，支持离线 AI 识别、搜索、图钉定位和备份，本地优先且无广告。" },
+  tw: { title: "Gotcha｜拍照記錄物品位置，快速找到東西", description: "Gotcha 用照片記錄房間、櫃子與物品的存放位置，支援離線 AI 辨識、搜尋、圖釘定位和備份，本機優先且無廣告。" },
+  en: { title: "Gotcha | Photo-Based Item & Home Organizer", description: "Remember where everything is with photos. Gotcha offers on-device AI, visual pins, fast search and portable backups with a privacy-first design." },
+  ja: { title: "Gotcha｜写真で持ち物の場所を記録・検索", description: "部屋、棚、持ち物の場所を写真で記録。オフラインAI、ピン表示、検索、バックアップに対応したプライバシー重視の整理アプリです。" },
+  ko: { title: "Gotcha｜사진으로 물건 위치 기록하고 찾기", description: "방, 수납장과 물건 위치를 사진으로 기록하세요. 오프라인 AI, 시각적 핀, 빠른 검색과 백업을 지원하는 개인정보 보호 중심 앱입니다." },
+};
 const screenshotSets: Record<Lang, string[]> = {
   zh: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => asset(`/screens/zh/${name}.jpg`)),
   tw: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => asset(`/screens/tw/${name}.jpg`)),
@@ -139,6 +146,13 @@ export default function Home() {
   useEffect(() => {
     document.documentElement.lang = languageTags[lang];
     window.localStorage.setItem("gotcha-language", lang);
+    const seo = seoCopy[lang];
+    document.title = seo.title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", seo.description);
+    document.querySelector('meta[property="og:title"]')?.setAttribute("content", seo.title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute("content", seo.description);
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", seo.title);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", seo.description);
   }, [lang]);
 
   useEffect(() => {
