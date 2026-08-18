@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const origin = "https://gotcha.typeflow.top";
+const origin = "https://skyloveflash1-netizen.github.io/gotcha-landing";
 
 export const metadata: Metadata = {
     metadataBase: new URL(origin),
