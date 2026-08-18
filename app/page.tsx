@@ -79,17 +79,19 @@ const copy = {
 } as const;
 
 type Lang = keyof typeof copy;
+const basePath = "/gotcha-landing";
+const asset = (path: string) => `${basePath}${path}`;
 const languages: { code: Lang; label: string }[] = [
   { code: "zh", label: "简中" }, { code: "tw", label: "繁中" }, { code: "en", label: "EN" }, { code: "ja", label: "日本語" }, { code: "ko", label: "한국어" },
 ];
 
 const languageTags: Record<Lang, string> = { zh: "zh-CN", tw: "zh-TW", en: "en", ja: "ja", ko: "ko" };
 const screenshotSets: Record<Lang, string[]> = {
-  zh: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/zh/${name}.jpg`),
-  tw: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/tw/${name}.jpg`),
-  en: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/en/${name}.jpg`),
-  ja: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/ja/${name}.jpg`),
-  ko: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/ko/${name}.jpg`),
+  zh: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => asset(`/screens/zh/${name}.jpg`)),
+  tw: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => asset(`/screens/tw/${name}.jpg`)),
+  en: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => asset(`/screens/en/${name}.jpg`)),
+  ja: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => asset(`/screens/ja/${name}.jpg`)),
+  ko: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => asset(`/screens/ko/${name}.jpg`)),
 };
 const galleryCopy: Record<Lang, { kicker: string; title: string; lead: string; labels: string[] }> = {
   zh: { kicker: "真实应用界面", title: "每一步，都清楚直观。", lead: "以下截图全部来自简体中文版 Gotcha。切换语言，整组截图会同步切换。", labels: ["建立你的空间", "浏览所有物品", "查看图钉内容", "空间图钉全景", "编辑名称与标签", "隐私与备份设置"] },
@@ -99,6 +101,19 @@ const galleryCopy: Record<Lang, { kicker: string; title: string; lead: string; l
   ko: { kicker: "실제 앱 화면", title: "모든 단계가 쉽고 명확해요.", lead: "아래 화면은 모두 한국어 Gotcha 앱입니다. 언어를 바꾸면 전체 스크린샷도 함께 바뀝니다.", labels: ["공간 만들기", "모든 물건 보기", "핀 내용 확인", "공간 전체 보기", "이름과 태그 편집", "개인정보와 백업"] },
 };
 
+function detectSystemLanguage(): Lang {
+  const preferred = navigator.languages?.length ? navigator.languages : [navigator.language];
+  for (const rawLanguage of preferred) {
+    const language = rawLanguage.toLowerCase();
+    if (language.startsWith("zh-tw") || language.startsWith("zh-hk") || language.startsWith("zh-mo") || language.includes("hant")) return "tw";
+    if (language.startsWith("zh")) return "zh";
+    if (language.startsWith("ja")) return "ja";
+    if (language.startsWith("ko")) return "ko";
+    if (language.startsWith("en")) return "en";
+  }
+  return "en";
+}
+
 export default function Home() {
   const [lang, setLang] = useState<Lang>("zh");
   const t = copy[lang];
@@ -107,7 +122,7 @@ export default function Home() {
 
   useEffect(() => {
     const saved = window.localStorage.getItem("gotcha-language") as Lang | null;
-    if (saved && saved in copy) setLang(saved);
+    setLang(saved && saved in copy ? saved : detectSystemLanguage());
   }, []);
 
   useEffect(() => {
@@ -119,13 +134,15 @@ export default function Home() {
 
   return (
     <main>
-      <nav className="nav shell" aria-label="Main navigation">
-        <a className="brand" href="#top" aria-label="Gotcha home"><img src="/images/gotcha-icon.png" alt="" /><span>Gotcha</span></a>
-        <div className="navTools">
-          <div className="navLinks"><a href="#features">{t.nav[0]}</a><a href="#how">{t.nav[1]}</a><a href="#privacy">{t.nav[2]}</a><a className="navCta" href="#download">{t.download}</a></div>
-          <label className="languageSelect"><span aria-hidden="true">文</span><select value={lang} onChange={(event) => changeLanguage(event.target.value as Lang)} aria-label="Language">{languages.map((item) => <option value={item.code} key={item.code}>{item.label}</option>)}</select></label>
-        </div>
-      </nav>
+      <header className="siteHeader">
+        <nav className="nav shell" aria-label="Main navigation">
+        <a className="brand" href="#top" aria-label="Gotcha home"><img src={asset("/images/gotcha-icon.png")} alt="" /><span>Gotcha</span></a>
+          <div className="navTools">
+            <div className="navLinks"><a href="#features">{t.nav[0]}</a><a href="#how">{t.nav[1]}</a><a href="#privacy">{t.nav[2]}</a><a className="navCta" href="#download">{t.download}</a></div>
+            <label className="languageSelect"><span aria-hidden="true">文</span><select value={lang} onChange={(event) => changeLanguage(event.target.value as Lang)} aria-label="Language">{languages.map((item) => <option value={item.code} key={item.code}>{item.label}</option>)}</select></label>
+          </div>
+        </nav>
+      </header>
 
       <section className="hero shell" id="top">
         <div className="heroCopy">
@@ -141,7 +158,7 @@ export default function Home() {
         <div className="heroVisual" aria-label="Gotcha app preview">
           <div className="orangeOrb" /><div className="phone phoneMain screenshotSwap" key={`${lang}-hero`}><img src={screens[0]} alt={gallery.labels[0]} width="720" height="1558" fetchPriority="high" /></div>
           <div className="floatingCard"><span className="pinDot">●</span><div><b>{lang === "en" ? "Passport" : lang === "ja" ? "パスポート" : lang === "ko" ? "여권" : "护照"}</b><small>Gotcha · found</small></div><strong>✓</strong></div>
-          <div className="brandTile"><img src="/images/gotcha-icon.png" alt="Gotcha icon" /></div>
+          <div className="brandTile"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha icon" /></div>
         </div>
       </section>
 
@@ -171,9 +188,9 @@ export default function Home() {
       <section className="privacy" id="privacy"><div className="shell privacyInner"><div><p className="sectionKicker">{t.privacyKicker}</p><h2>{t.privacyTitle}</h2><p className="privacyText">{t.privacyText}</p><a className="textLink" href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink} ↗</a></div>
         <div className="privacyCard"><div className="shield">⌂<span>✓</span></div>{t.privacyItems.map(item=><p key={item}><span>✓</span>{item}</p>)}</div></div></section>
 
-      <section className="finalCta" id="download"><div className="shell finalInner"><img src="/images/gotcha-icon.png" alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a></div></section>
+      <section className="finalCta" id="download"><div className="shell finalInner"><img src={asset("/images/gotcha-icon.png")} alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><a className="button buttonDark finalButton" href={appStoreUrls[lang]} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a></div></section>
 
-      <footer><div className="shell footerInner"><div className="brand"><img src="/images/gotcha-icon.png" alt="" /><span>Gotcha</span></div><p>{t.footer}</p><a href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink}</a></div>
+      <footer><div className="shell footerInner"><div className="brand"><img src={asset("/images/gotcha-icon.png")} alt="" /><span>Gotcha</span></div><p>{t.footer}</p><a href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink}</a></div>
         <div className="shell languageBar" aria-label="Language">{languages.map(item=><button className={lang===item.code?"active":""} key={item.code} onClick={()=>changeLanguage(item.code)} aria-pressed={lang===item.code}>{item.label}</button>)}</div>
       </footer>
     </main>
