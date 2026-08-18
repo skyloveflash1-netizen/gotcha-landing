@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const appStoreUrl = "https://apps.apple.com/app/id6788549634";
 
@@ -77,15 +77,48 @@ const languages: { code: Lang; label: string }[] = [
   { code: "zh", label: "简中" }, { code: "tw", label: "繁中" }, { code: "en", label: "EN" }, { code: "ja", label: "日本語" }, { code: "ko", label: "한국어" },
 ];
 
+const languageTags: Record<Lang, string> = { zh: "zh-CN", tw: "zh-TW", en: "en", ja: "ja", ko: "ko" };
+const screenshotSets: Record<Lang, string[]> = {
+  zh: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/zh/${name}.jpg`),
+  tw: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/tw/${name}.jpg`),
+  en: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/en/${name}.jpg`),
+  ja: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/ja/${name}.jpg`),
+  ko: ["spaces", "items", "pin-detail", "pin-map", "edit", "settings"].map((name) => `/screens/ko/${name}.jpg`),
+};
+const galleryCopy: Record<Lang, { kicker: string; title: string; lead: string; labels: string[] }> = {
+  zh: { kicker: "真实应用界面", title: "每一步，都清楚直观。", lead: "以下截图全部来自简体中文版 Gotcha。切换语言，整组截图会同步切换。", labels: ["建立你的空间", "浏览所有物品", "查看图钉内容", "空间图钉全景", "编辑名称与标签", "隐私与备份设置"] },
+  tw: { kicker: "真實應用介面", title: "每一步，都清楚直覺。", lead: "以下截圖全部來自繁體中文版 Gotcha。切換語言，整組截圖會同步切換。", labels: ["建立你的空間", "瀏覽所有物品", "查看圖釘內容", "空間圖釘全景", "編輯名稱與標籤", "隱私與備份設定"] },
+  en: { kicker: "Real app screens", title: "Clear at every step.", lead: "Every screen below comes from Gotcha in English. Change the language and the entire gallery changes with it.", labels: ["Build your spaces", "Browse every item", "Open a visual pin", "See the whole space", "Edit names and tags", "Privacy and backup"] },
+  ja: { kicker: "実際のアプリ画面", title: "すべての操作が、わかりやすい。", lead: "以下はすべて日本語版Gotchaの画面です。言語を切り替えると、スクリーンショットも一緒に切り替わります。", labels: ["空間を作る", "持ち物を一覧", "ピンの中を見る", "空間全体を確認", "名前とタグを編集", "プライバシーとバックアップ"] },
+  ko: { kicker: "실제 앱 화면", title: "모든 단계가 쉽고 명확해요.", lead: "아래 화면은 모두 한국어 Gotcha 앱입니다. 언어를 바꾸면 전체 스크린샷도 함께 바뀝니다.", labels: ["공간 만들기", "모든 물건 보기", "핀 내용 확인", "공간 전체 보기", "이름과 태그 편집", "개인정보와 백업"] },
+};
+
 export default function Home() {
   const [lang, setLang] = useState<Lang>("zh");
   const t = copy[lang];
+  const gallery = galleryCopy[lang];
+  const screens = screenshotSets[lang];
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem("gotcha-language") as Lang | null;
+    if (saved && saved in copy) setLang(saved);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = languageTags[lang];
+    window.localStorage.setItem("gotcha-language", lang);
+  }, [lang]);
+
+  const changeLanguage = (next: Lang) => setLang(next);
 
   return (
     <main>
       <nav className="nav shell" aria-label="Main navigation">
         <a className="brand" href="#top" aria-label="Gotcha home"><img src="/images/gotcha-icon.png" alt="" /><span>Gotcha</span></a>
-        <div className="navLinks"><a href="#features">{t.nav[0]}</a><a href="#how">{t.nav[1]}</a><a href="#privacy">{t.nav[2]}</a><a className="navCta" href="#download">{t.download}</a></div>
+        <div className="navTools">
+          <div className="navLinks"><a href="#features">{t.nav[0]}</a><a href="#how">{t.nav[1]}</a><a href="#privacy">{t.nav[2]}</a><a className="navCta" href="#download">{t.download}</a></div>
+          <label className="languageSelect"><span aria-hidden="true">文</span><select value={lang} onChange={(event) => changeLanguage(event.target.value as Lang)} aria-label="Language">{languages.map((item) => <option value={item.code} key={item.code}>{item.label}</option>)}</select></label>
+        </div>
       </nav>
 
       <section className="hero shell" id="top">
@@ -100,7 +133,7 @@ export default function Home() {
           <p className="microcopy">{t.trust.map((item) => <span key={item}>✓ {item}</span>)}</p>
         </div>
         <div className="heroVisual" aria-label="Gotcha app preview">
-          <div className="orangeOrb" /><div className="phone phoneMain"><img src="/images/spaces.png" alt="Gotcha spaces screen" /></div>
+          <div className="orangeOrb" /><div className="phone phoneMain screenshotSwap" key={`${lang}-hero`}><img src={screens[0]} alt={gallery.labels[0]} width="720" height="1558" fetchPriority="high" /></div>
           <div className="floatingCard"><span className="pinDot">●</span><div><b>{lang === "en" ? "Passport" : lang === "ja" ? "パスポート" : lang === "ko" ? "여권" : "护照"}</b><small>Gotcha · found</small></div><strong>✓</strong></div>
           <div className="brandTile"><img src="/images/gotcha-icon.png" alt="Gotcha icon" /></div>
         </div>
@@ -113,8 +146,15 @@ export default function Home() {
 
       <section className="showcase" id="how">
         <div className="shell"><header className="sectionHeader light"><p className="sectionKicker">{t.flowKicker}</p><h2>{t.flowTitle}</h2></header>
-          <div className="showcaseGrid"><div className="screens"><div className="phone phoneBack"><img src="/images/items.png" alt="Gotcha item gallery" /></div><div className="phone phoneFront"><img src="/images/pins.png" alt="Gotcha visual pin screen" /></div></div>
+          <div className="showcaseGrid"><div className="screens screenshotSwap" key={`${lang}-showcase`}><div className="phone phoneBack"><img src={screens[1]} alt={gallery.labels[1]} width="720" height="1558" loading="lazy" /></div><div className="phone phoneFront"><img src={screens[2]} alt={gallery.labels[2]} width="720" height="1558" loading="lazy" /></div></div>
             <ol className="steps">{t.steps.map(([num,title,text]) => <li key={num}><span>{num}</span><div><h3>{title}</h3><p>{text}</p></div></li>)}</ol></div>
+        </div>
+      </section>
+
+      <section className="section shell gallerySection" id="screenshots">
+        <header className="sectionHeader"><p className="sectionKicker">{gallery.kicker}</p><h2>{gallery.title}</h2><p>{gallery.lead}</p></header>
+        <div className="screenGallery screenshotSwap" key={`${lang}-gallery`}>
+          {screens.map((src, index) => <figure className="screenCard" key={src}><div className="screenFrame"><img src={src} alt={gallery.labels[index]} width="720" height="1558" loading={index < 2 ? "eager" : "lazy"} decoding="async" /></div><figcaption><span>{String(index + 1).padStart(2, "0")}</span>{gallery.labels[index]}</figcaption></figure>)}
         </div>
       </section>
 
@@ -128,7 +168,7 @@ export default function Home() {
       <section className="finalCta" id="download"><div className="shell finalInner"><img src="/images/gotcha-icon.png" alt="Gotcha" /><h2>{t.finalTitle.split("\n").map((line)=><span key={line}>{line}</span>)}</h2><p>{t.finalLead}</p><a className="button buttonDark finalButton" href={appStoreUrl} target="_blank" rel="noreferrer"><b></b><span><small>Download on the</small>App Store</span></a></div></section>
 
       <footer><div className="shell footerInner"><div className="brand"><img src="/images/gotcha-icon.png" alt="" /><span>Gotcha</span></div><p>{t.footer}</p><a href="https://skyloveflash1-netizen.github.io/gotcha-privacy/" target="_blank" rel="noreferrer">{t.privacyLink}</a></div>
-        <div className="shell languageBar" aria-label="Language">{languages.map(item=><button className={lang===item.code?"active":""} key={item.code} onClick={()=>setLang(item.code)}>{item.label}</button>)}</div>
+        <div className="shell languageBar" aria-label="Language">{languages.map(item=><button className={lang===item.code?"active":""} key={item.code} onClick={()=>changeLanguage(item.code)} aria-pressed={lang===item.code}>{item.label}</button>)}</div>
       </footer>
     </main>
   );
